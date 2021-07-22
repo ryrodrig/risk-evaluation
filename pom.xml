@@ -3,10 +3,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.5.2</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<groupId>org.cfgtest.services</groupId>
+		<artifactId>mvn-bom</artifactId>
+		<version>1.0-SNAPSHOT</version>
 	</parent>
 	<groupId>com.cfgtest.services</groupId>
 	<artifactId>risk-evaluation</artifactId>
@@ -21,99 +20,36 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-artemis</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-			<scope>runtime</scope>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
+			<artifactId>spring-boot-starter-webflux</artifactId>
 		</dependency>
 
-<!--		Custom dependencies -->
-		<dependency>
-			<groupId>org.springdoc</groupId>
-			<artifactId>springdoc-openapi-ui</artifactId>
-			<version>1.5.9</version>
-		</dependency>
-
-		<dependency>
-			<groupId>io.swagger</groupId>
-			<artifactId>swagger-annotations</artifactId>
-			<version>1.6.2</version>
-		</dependency>
-
-<!--		<dependency>-->
-<!--			<groupId>io.swagger.core.v3</groupId>-->
-<!--			<artifactId>swagger-annotations</artifactId>-->
-<!--			<version>2.1.10</version>-->
-<!--		</dependency>-->
-
-<!--		<dependency>-->
-<!--			<groupId>io.swagger.parser.v3</groupId>-->
-<!--			<artifactId>swagger-parser</artifactId>-->
-<!--			<version>2.0.27</version>-->
-<!--		</dependency>-->
-
+<!-- version and scope defined in BOM's dependencyManagement section -->
 		<dependency>
 			<groupId>javax.validation</groupId>
 			<artifactId>validation-api</artifactId>
-			<version>2.0.1.Final</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.openapitools</groupId>
 			<artifactId>jackson-databind-nullable</artifactId>
-			<version>0.2.1</version>
 		</dependency>
 
 	</dependencies>
 
 	<build>
 		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<excludes>
-						<exclude>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
-<!--			Plugin to server stubs
- https://stackoverflow.com/questions/62915594/open-api-code-generator-maven-plugin-uses-old-swagger-2-annotations-instead-of-s
 
- This plugin generates swagger v2 annotations and hence  documentations are not generated right.
-
- -->
 			<plugin>
 				<groupId>org.openapitools</groupId>
 				<artifactId>openapi-generator-maven-plugin</artifactId>
-				<version>4.2.3</version>
 				<executions>
 					<execution>
 						<goals>
@@ -130,43 +66,37 @@
 								ApiUtil.java
 							</supportingFilesToGenerate>
 							<configOptions>
-<!--								<sourceFolder>src/main/java/</sourceFolder>-->
-<!--								<delegatePattern>true</delegatePattern>-->
+								<!--								<sourceFolder>src/main/java/</sourceFolder>-->
+								<!--								<delegatePattern>true</delegatePattern>-->
 								<interfaceOnly>true</interfaceOnly>
 							</configOptions>
 						</configuration>
 					</execution>
+					<execution>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<inputSpec>
+								${project.basedir}/src/main/resources/api-spec/Customer-Service-1.0.0.yaml
+							</inputSpec>
+							<generatorName>spring</generatorName>
+<!--							<apiPackage>com.cfgtest.client.customerservice.api</apiPackage>-->
+							<modelPackage>com.cfgtest.client.customerservice.model</modelPackage>
+<!--							<supportingFilesToGenerate>-->
+<!--								ApiUtil.java-->
+<!--							</supportingFilesToGenerate>-->
+<!--							<configOptions>-->
+<!--								&lt;!&ndash;								<sourceFolder>src/main/java/</sourceFolder>&ndash;&gt;-->
+<!--								&lt;!&ndash;								<delegatePattern>true</delegatePattern>&ndash;&gt;-->
+<!--								<interfaceOnly>true</interfaceOnly>-->
+<!--							</configOptions>-->
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
-<!--			Plugin to generate swagger documentation based on annotations
-The plugin generates documentation within target folder and can be accessed using the below url
-http://localhost:8080/v3/api-docs.
 
-Url can be overridden using configuration entries
--->
-<!--			<plugin>-->
-<!--				<groupId>org.springdoc</groupId>-->
-<!--				<artifactId>springdoc-openapi-maven-plugin</artifactId>-->
-<!--				<version>0.2</version>-->
-<!--				<executions>-->
-<!--					<execution>-->
-<!--						<phase>integration-test</phase>-->
-<!--						<goals>-->
-<!--							<goal>generate</goal>-->
-<!--						</goals>-->
-<!--					</execution>-->
-<!--				</executions>-->
-<!--				<configuration>-->
-<!--&lt;!&ndash;					<apiDocsUrl>http://localhost:8080/v3/api-docs</apiDocsUrl>&ndash;&gt;-->
-<!--					<outputFileName>risk-evaluation.json</outputFileName>-->
-<!--				</configuration>-->
-<!--			</plugin>-->
-<!--			Plugin to generate pojo objects.. Usually used by client applications-->
-<!--			<plugin>-->
-<!--			<groupId>io.swagger</groupId>-->
-<!--			<artifactId>swagger-codegen-maven-plugin</artifactId>-->
-<!--			<version>2.2.3</version>-->
-<!--			</plugin>-->
+
 		</plugins>
 	</build>
 

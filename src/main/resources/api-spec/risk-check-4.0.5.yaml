@@ -61,146 +61,18 @@ definitions:
   riskCheckResponse:
     type: "object"
     properties:
-      veridDetails:
-        description: "Verification questions for each applicant in the Customer Application."
-        type: "array"
-        items:
-          type: "object"
-          properties:
-            applicationId:
-              type: string
-              example: 123456789
-              description: application identifier defined in the client application.
-            applicantId:
-              type: "string"
-              format: "uuid"
-              example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
-            veridResult:
-              type: "string"
-              example: "questions"
-            veridTransactionNumber:
-              type: "number"
-              example: 26020874386807
-            veridAccountsTransactionId:
-              type: "number"
-              example: 34550231
-            veridQuestionsDetail:
-              type: "object"
-              properties:
-                veridCode:
-                  type: "string"
-                  example: "iauth.questions.set1"
-                veridText:
-                  type: "string"
-                  example: "Initial set of authentication questions"
-            veridQuestions:
-              type: "object"
-              properties:
-                veridQuestionSetId:
-                  type: "number"
-                  example: 26020796806475
-                veridQuestionType:
-                  type: "array"
-                  items:
-                    type: "object"
-                    properties:
-                      veridTrxQuestionidId:
-                        type: "number"
-                        example: 26021832740371
-                      veridAnswerType:
-                        type: "string"
-                        example: "single"
-                      veridText:
-                        type: "string"
-                        example: "What color was the '2007 Chevrolet Equinox' that\
-                          \ you have owned?"
-                      veridChoice:
-                        type: "array"
-                        items:
-                          type: "object"
-                          properties:
-                            veridChoiceId:
-                              type: "number"
-                              example: 26027232399112
-                            veridText:
-                              type: "string"
-                              example: "Brown"
-                      veridHelpText:
-                        type: "string"
-                        example: "May include vehicles that were previously owned,\
-                          \ leased or co-signed by you"
-      combinedDecison:
-        type: "object"
-        properties:
-          status:
-            type: "string"
-            enum:
-            - "APPROVED"
-            - "PENDED"
-            - "DECLINED"
-            example: "Approved"
-            description: "status of risk checks. This is an optional field as is not\
-              \ available when veridDetails section is returned."
-          description:
-            type: "string"
-            example: "Customer approved"
-          details:
-            type: "array"
-            description: "contains responses from risk modules for each applicant."
-            items:
-              type: "object"
-              properties:
-                applicantId:
-                  type: "string"
-                  example: "d290f1ee-6c54-4b01-90e6-d701748f0851"
-                applicantType:
-                  type: "string"
-                  enum:
-                  - "PRIMARY"
-                  - "JOINT"
-                applicantRiskCheckStatus:
-                  type: "string"
-                  enum:
-                  - "APPROVED"
-                  - "PENDED"
-                  - "DECLINED"
-                decisionDescription:
-                  type: "string"
-                  description: "Applicant Risk Status description."
-                riskChecks:
-                  type: "array"
-                  items:
-                    type: "object"
-                    properties:
-                      module:
-                        type: "string"
-                        example: "OFAC"
-                      moduleReferenceId:
-                        type: "string"
-                        example: "123ABC"
-                      status:
-                        type: "string"
-                        example: "SOFTPASS"
-                        enum:
-                        - "SOFTPASS"
-                        - "SOFTFAIL"
-                        - "HARDFAIL"
-                        - "INCOMPLETE"
-                        - "REVIEW"
-                        - "APPROVED"
-                        - "DECLINED"
-                        - "SUCCESS"
-                        - "ERROR"
-                        - "FAILED"
-                      displayMessage:
-                        type: "string"
-                        example: "Customer is approved."
-                      decisionDescription:
-                        type: "string"
-                        example: "Decision"
-                      decisionCode:
-                        type: "string"
-                        description: "Applicant Risk Status decision code."
+      status:
+        type: "string"
+        enum:
+        - "APPROVED"
+        - "PENDED"
+        - "DECLINED"
+        example: "Approved"
+        description: "status of risk checks. This is an optional field as is not\
+          \ available when veridDetails section is returned."
+      description:
+        type: "string"
+        example: "Customer approved"
       link:
         type: "array"
         items:
@@ -226,15 +98,3 @@ definitions:
             contentType:
               type: "string"
               example: "application/json"
-      error:
-        type: "object"
-        properties:
-          code:
-            type: "string"
-            example: "ABCD123"
-          reason:
-            type: "string"
-            example: "reason for declined or pended application."
-        description: "Contains reason and code for declined or pended application\
-          \ Response would be grouped if the riskCheck is made on a transactionId\
-          \ level otherwise it would contain riskChecks for specific applicant."
