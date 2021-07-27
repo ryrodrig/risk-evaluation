@@ -16,6 +16,7 @@
 		<java.version>11</java.version>
 	</properties>
 	<dependencies>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-artemis</artifactId>
@@ -42,6 +43,20 @@
 			<artifactId>jackson-databind-nullable</artifactId>
 		</dependency>
 
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<version>2.5.2</version>
+		</dependency>
+
+		<!--		Custom dependencies -->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-ui</artifactId>
+			<version>1.5.9</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -52,6 +67,7 @@
 				<artifactId>openapi-generator-maven-plugin</artifactId>
 				<executions>
 					<execution>
+<!--						<id>server-class-generation</id>-->
 						<goals>
 							<goal>generate</goal>
 						</goals>
@@ -72,27 +88,28 @@
 							</configOptions>
 						</configuration>
 					</execution>
-					<execution>
-						<goals>
-							<goal>generate</goal>
-						</goals>
-						<configuration>
-							<inputSpec>
-								${project.basedir}/src/main/resources/api-spec/Customer-Service-1.0.0.yaml
-							</inputSpec>
-							<generatorName>spring</generatorName>
-<!--							<apiPackage>com.cfgtest.client.customerservice.api</apiPackage>-->
-							<modelPackage>com.cfgtest.client.customerservice.model</modelPackage>
-<!--							<supportingFilesToGenerate>-->
-<!--								ApiUtil.java-->
-<!--							</supportingFilesToGenerate>-->
-<!--							<configOptions>-->
-<!--								&lt;!&ndash;								<sourceFolder>src/main/java/</sourceFolder>&ndash;&gt;-->
-<!--								&lt;!&ndash;								<delegatePattern>true</delegatePattern>&ndash;&gt;-->
-<!--								<interfaceOnly>true</interfaceOnly>-->
-<!--							</configOptions>-->
-						</configuration>
-					</execution>
+<!--					<execution>-->
+<!--						<id>client-class-generation</id>-->
+<!--						<goals>-->
+<!--							<goal>generate</goal>-->
+<!--						</goals>-->
+<!--						<configuration>-->
+<!--							<inputSpec>-->
+<!--								${project.basedir}/src/main/resources/api-spec/Customer-Service-1.0.0.yaml-->
+<!--							</inputSpec>-->
+<!--							<generatorName>spring</generatorName>-->
+<!--&lt;!&ndash;							<apiPackage>com.cfgtest.client.customerservice.api</apiPackage>&ndash;&gt;-->
+<!--							<modelPackage>com.cfgtest.client.customerservice.model</modelPackage>-->
+<!--&lt;!&ndash;							<supportingFilesToGenerate>&ndash;&gt;-->
+<!--&lt;!&ndash;								ApiUtil.java&ndash;&gt;-->
+<!--&lt;!&ndash;							</supportingFilesToGenerate>&ndash;&gt;-->
+<!--&lt;!&ndash;							<configOptions>&ndash;&gt;-->
+<!--&lt;!&ndash;								&lt;!&ndash;								<sourceFolder>src/main/java/</sourceFolder>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;								&lt;!&ndash;								<delegatePattern>true</delegatePattern>&ndash;&gt;&ndash;&gt;-->
+<!--&lt;!&ndash;								<interfaceOnly>true</interfaceOnly>&ndash;&gt;-->
+<!--&lt;!&ndash;							</configOptions>&ndash;&gt;-->
+<!--						</configuration>-->
+<!--					</execution>-->
 				</executions>
 			</plugin>
 
