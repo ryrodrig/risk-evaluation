@@ -28,12 +28,14 @@ public class RiskModulePayload extends BaseDTO {
     @Column(length = 36, columnDefinition = "varchar", updatable = false, nullable = false)
     private UUID riskModuleId;
 
+    @Lob
     private String requestPayload;
 
+    @Lob
     private String responsePayload;
 
     // Unidirectional join..
-    // This entity is the owner entity and references ROskModulePayload table.
+    // This entity is the owner entity and references RiskModulePayload table.
     @ManyToOne(fetch = FetchType.LAZY)
     // Name of the column that hold foreign key reference to primary key in RiskModulePayload..
     // https://www.baeldung.com/jpa-join-column

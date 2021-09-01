@@ -32,36 +32,80 @@
 			<artifactId>spring-boot-starter-webflux</artifactId>
 		</dependency>
 
-<!-- version and scope defined in BOM's dependencyManagement section -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>javax.servlet</groupId>
+					<artifactId>servlet-api</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-openfeign</artifactId>
+		</dependency>
+<!--		<dependency>-->
+<!--			<groupId>org.springframework.cloud</groupId>-->
+<!--			<artifactId>spring-cloud-starter-netflix-ribbon</artifactId>-->
+<!--		</dependency>-->
+
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+
+
+		<!--		Custom dependencies -->
+
 		<dependency>
 			<groupId>javax.validation</groupId>
 			<artifactId>validation-api</artifactId>
 		</dependency>
 
 		<dependency>
-			<groupId>org.openapitools</groupId>
-			<artifactId>jackson-databind-nullable</artifactId>
-		</dependency>
-
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-			<version>2.5.2</version>
-		</dependency>
-
-		<!--		Custom dependencies -->
-		<dependency>
 			<groupId>org.springdoc</groupId>
 			<artifactId>springdoc-openapi-ui</artifactId>
 			<version>1.5.9</version>
+		</dependency>
+
+
+<!--		<dependency>-->
+<!--			<groupId>org.springdoc</groupId>-->
+<!--			<artifactId>springdoc-openapi-webflux-ui</artifactId>-->
+<!--			<version>1.5.9</version>-->
+<!--		</dependency>-->
+
+
+		<dependency>
+			<groupId>org.openapitools</groupId>
+			<artifactId>jackson-databind-nullable</artifactId>
+		</dependency>
+<!-- Needed to support local date format json string conversion -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>6.0.17.Final</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
 		</dependency>
 
 	</dependencies>
 
 	<build>
 		<plugins>
-
+<!--			https://github.com/OpenAPITools/openapi-generator/blob/master/modules/openapi-generator-maven-plugin/README.md-->
 			<plugin>
 				<groupId>org.openapitools</groupId>
 				<artifactId>openapi-generator-maven-plugin</artifactId>
@@ -72,6 +116,7 @@
 							<goal>generate</goal>
 						</goals>
 						<configuration>
+							<generatorName>spring</generatorName>
 							<inputSpec>
 								${project.basedir}/src/main/resources/api-spec/risk-check-4.0.5.yaml
 							</inputSpec>
@@ -88,31 +133,84 @@
 							</configOptions>
 						</configuration>
 					</execution>
-<!--					<execution>-->
-<!--						<id>client-class-generation</id>-->
-<!--						<goals>-->
-<!--							<goal>generate</goal>-->
-<!--						</goals>-->
-<!--						<configuration>-->
-<!--							<inputSpec>-->
-<!--								${project.basedir}/src/main/resources/api-spec/Customer-Service-1.0.0.yaml-->
-<!--							</inputSpec>-->
-<!--							<generatorName>spring</generatorName>-->
-<!--&lt;!&ndash;							<apiPackage>com.cfgtest.client.customerservice.api</apiPackage>&ndash;&gt;-->
-<!--							<modelPackage>com.cfgtest.client.customerservice.model</modelPackage>-->
-<!--&lt;!&ndash;							<supportingFilesToGenerate>&ndash;&gt;-->
-<!--&lt;!&ndash;								ApiUtil.java&ndash;&gt;-->
-<!--&lt;!&ndash;							</supportingFilesToGenerate>&ndash;&gt;-->
-<!--&lt;!&ndash;							<configOptions>&ndash;&gt;-->
+					<execution>
+						<id>client-class-generation</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<inputSpec>
+								${project.basedir}/src/main/resources/api-spec/Customer-Service-1.0.1.yaml
+							</inputSpec>
+							<generatorName>spring</generatorName>
+<!--							<apiPackage>com.cfgtest.client.customerservice.api</apiPackage>-->
+							<modelPackage>com.cfgtest.client.customerservice.model</modelPackage>
+<!--							<invokerPackage>com.cfgtest.client.customerservice</invokerPackage>-->
+<!--							<supportingFilesToGenerate>-->
+<!--								ApiClient.java-->
+<!--							</supportingFilesToGenerate>-->
+							<generateSupportingFiles>false</generateSupportingFiles>
+							<generateApis>false</generateApis>
+							<configOptions>
+								<dateLibrary>java8</dateLibrary>
 <!--&lt;!&ndash;								&lt;!&ndash;								<sourceFolder>src/main/java/</sourceFolder>&ndash;&gt;&ndash;&gt;-->
 <!--&lt;!&ndash;								&lt;!&ndash;								<delegatePattern>true</delegatePattern>&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;								<interfaceOnly>true</interfaceOnly>&ndash;&gt;-->
-<!--&lt;!&ndash;							</configOptions>&ndash;&gt;-->
-<!--						</configuration>-->
-<!--					</execution>-->
+<!--								<interfaceOnly>true</interfaceOnly>-->
+							</configOptions>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.8.1</version>
+				<configuration>
+					<annotationProcessorPaths>
+						<!-- Used to generate the mapper implementation class during build, using annotation process concept of java.
+                            Annotations can be processed at runtime using reflection but it would rake time at startup, hence an alternate approach
+                            is to use annotation processors at compile-time.
+                            Inorder to perform, we need to define a class that extends AbstractProcessor and register it at compile time.. the processor
+                            contains an annotation to filter. within Maven you can register such classes using annotationProcessor tag..
+                            In below case we need mapstruct processor and lombok's processor to be registered which will modify the code at compile time.
+                            During build annotation processors are called by compiler when one of the configured annotations on the processors are found.
+                            THe processor then generates code or calls other annotation processors based on the logic within process().
+                        -->
+						<path>
+							<groupId>org.mapstruct</groupId>
+							<artifactId>mapstruct</artifactId>
+							<version>${org.mapstruct.version}</version>
+						</path>
+						<!-- Contains the mapstruct annotation processor -->
+						<path>
+							<groupId>org.mapstruct</groupId>
+							<artifactId>mapstruct-processor</artifactId>
+							<version>${org.mapstruct.version}</version>
+						</path>
+						<!-- Ties mapstruct with lombok. -->
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>${lombok.version}</version>
+						</path>
+						<!-- Needed when using lombok 1.18.16 and above -->
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok-mapstruct-binding</artifactId>
+							<version>0.2.0</version>
+						</path>
+					</annotationProcessorPaths>
+					<compilerArgs>
+						<!--  Compiler argument that will make the generated class spring aware by
+                        adding @Component annotation.-->
+						<compilerArg>
+							-Amapstruct.defaultComponentModel=spring
+						</compilerArg>
 
+					</compilerArgs>
+				</configuration>
+
+			</plugin>
 
 		</plugins>
 	</build>

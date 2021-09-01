@@ -7,5 +7,5 @@ public interface RiskCheckService {
 
     RiskCheckResponse performRiskCheck(String transactionId);
 
-    Mono<RiskCheckResponse> performAsyncRiskCheck(String transactionId);
+//    Mono<RiskCheckResponse> performAsyncRiskCheck(String transactionId);
 }

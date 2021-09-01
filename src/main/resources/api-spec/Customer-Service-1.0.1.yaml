@@ -1,0 +1,392 @@
+openapi: 3.0.0
+# Added by API Auto Mocking Plugin
+servers:
+  - description: Customer Service API
+    url: https://swagger-hub.corp.internal.citizensbank.com/virts/N100371/Customer-Service/1.0.0
+info:
+  description: |
+    Customer Service API
+  version: "1.0.1"
+  title: Customer Service
+tags:
+  - name: customer
+    description: Operations about Customer
+    externalDocs:
+      description: Customer Service
+      url: http://localhost:8090/customer-service
+  # - name: customers
+  #   description: Operations about Customers
+  #   externalDocs:
+  #     description: Customer Service
+  #     url: http://localhost:8090/customer-service
+paths:
+  /customer:
+    post:
+      tags:
+        - customer
+      summary: Create Customer
+      description: Customer Details.
+      operationId: createCustomer
+      responses:
+        '201':
+          description: successful operation
+        '400':
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+        '404':
+          description: Customer not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+        '500':
+          description: Internal Service Error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+        description: Created Customer object
+        required: true
+  /customer/createWithArray:
+    post:
+      tags:
+        - customer
+      summary: Creates list of Customers with given input array
+      operationId: createCustomersWithArrayInput
+      responses:
+        '201':
+          description: successful operation
+        '400':
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+        '404':
+          description: Customer not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+        '500':
+          description: Internal Service Error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customers'
+        description: Created Customers object
+        required: true
+  '/customers':
+    get:
+      tags:
+        - customer
+      summary: Get Customers by filter criteria
+      operationId: getCustomerByFilterCriteria
+      parameters:
+        - name: firstName
+          in: query
+          description: Customer First Name.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customers'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Customers'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+        '404':
+          description: Customer not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+        '500':
+          description: Internal Service Error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+  '/customer/{customerId}':
+    get:
+      tags:
+        - customer
+      summary: Get customer by Customer Id.
+      operationId: getCustomerById
+      parameters:
+        - name: customerId
+          in: path
+          description: The customerId that needs to be fetched. Use user1 for testing.
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        '400':
+          description: Invalid username supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+        '500':
+          description: Internal Service Error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+    put:
+      tags:
+        - customer
+      summary: Updated customer
+      description: Update Customer details.
+      operationId: updateCustomer
+      parameters:
+        - name: customerId
+          in: path
+          description: name that need to be updated
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Successful operation
+        '400':
+          description: Invalid request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+        '404':
+          description: Customer not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+        '500':
+          description: Internal Service Error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+              # oneOf:  # validates value against exactly one of the subschemas.. In this case either student/general customer.
+              #   - $ref: '#/components/schemas/Student'
+              #   - $ref: '#/components/schemas/General'
+              # discriminator:
+              #   propertyName: customer_type
+        description: Updated customer object
+        required: true
+    delete:
+      tags:
+        - customer
+      summary: Delete customer
+      description: Delete a customer record with name.
+      operationId: deleteCustomer
+      parameters:
+        - name: customerId
+          in: path
+          description: The name that needs to be deleted
+          required: true
+          schema:
+            type: string
+      responses:
+        '400':
+          description: Invalid customer supplied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+
+        '404':
+          description: Customer not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDetails'
+
+externalDocs:
+  description: Find out more about Swagger
+  url: 'http://swagger.io'
+components:
+  schemas:
+    Customers:
+      # type: object
+      # properties:
+      #   customers:
+      type: array
+      items:
+        $ref: '#/components/schemas/Customer'
+      description: List of customers
+    Customer:
+      type: object
+      required:
+        - customer_type
+        - firstName
+        - dateOfBirth
+        - ssn
+        - address
+      properties:
+        id:
+          type: string
+          format: uuid
+        firstName:
+          type: string
+        middleName:
+          type: string
+        lastName:
+          type: string
+        dateOfBirth:
+          type: string
+          format: date
+        email:
+          type: string
+        ssn:
+          type: string
+          minLength: 1
+          maxLength: 12
+        phone:
+          type: string
+        address:
+          type: object
+          required:
+            - line1
+            - zipcode
+          properties:
+            line1:
+              type: string
+            line2:
+              type: string
+            zipcode:
+              type: string
+        customer_type:
+          type: string
+          enum: [ STUDENT, GENERAL ]
+      discriminator: # discriminator field to determine the subschema to use.
+        propertyName: customer_type
+        # since open-api does not support one-of , below is work around.
+        mapping:
+          'STUDENT': '#/components/schemas/StudentCustomer'
+          'GENERAL': '#/components/schemas/GeneralCustomer'
+      xml:
+        name: Customer
+    StudentCustomer: # "Student" is the value for the customer_type property ( the discriminator value )
+      allOf: # Combines the main 'Customer' schema with 'Student' specific properties.
+        - $ref: '#/components/schemas/Customer'
+        - type: object
+          required:
+            - university
+          properties:
+            university:
+              type: string
+    GeneralCustomer: # "General" is the value for the customer_type property ( the discriminator value )
+      allOf: # Combines the main 'Customer' schema with 'General' specific properties.
+        - $ref: '#/components/schemas/Customer'
+        - type: object
+          required:
+            - employed
+          properties:
+            employed:
+              type: boolean
+            employerName:
+              type: string
+            salary:
+              type: integer
+    ErrorDetails:
+      type: object
+      properties:
+        errorDetails:
+          type: array
+          items:
+            type: object
+            properties:
+              code:
+                type: integer
+                description: error code
+              message:
+                type: string
+                description: error description
+        result:
+          type: string
+          description: error result
+          enum:
+            - FAILED
+            - WARNING
+        source:
+          type: string
+          description: source system of error.
+        traceId:
+          type: string
+          description: source system trace id.
+        userSessionId:
+          type: string
+          description: user request id.
+
+
+  # requestBodies:
+  #   CustomerArray:
+  #     content:
+  #       application/json:
+  #         schema:
+  #           type: object
+  #           properties:
+  #             customers:
+  #               type: array
+  #               items:
+  #                 $ref: '#/components/schemas/Customer'
+  #     description: List of user object
+  #     required: true
+  securitySchemes:
+    petstore_auth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: 'http://petstore.swagger.io/oauth/dialog'
+          scopes:
+            'write:pets': modify pets in your account
+            'read:pets': read your pets
+    api_key:
+      type: apiKey
+      name: api_key
+      in: header
